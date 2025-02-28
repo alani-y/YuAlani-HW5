@@ -8,12 +8,14 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
+    var pizzaList:[Pizza] = [] // stores the pizzas
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
 
-
+    
 }
 
