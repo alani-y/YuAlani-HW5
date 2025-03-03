@@ -1,4 +1,6 @@
-//
+// Project: YuAlani-HW5
+// EID: ay7892
+// Course: CS329E
 //  PizzaCreationVC.swift
 //  YuAlani-HW5
 //
@@ -18,10 +20,10 @@ class PizzaCreationVC: UIViewController {
     var meatChoice = "";
     var veggieChoice = "";
     
+    var delegate: UIViewController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
     
     @IBAction func onSegmentChanged(_ sender: Any){
@@ -33,8 +35,6 @@ class PizzaCreationVC: UIViewController {
         default:
             pSizeChoice = "Small"
         }
-        
-        print(pSizeChoice)
     }
     
     // gets the user's crust choice
@@ -63,7 +63,6 @@ class PizzaCreationVC: UIViewController {
     // stores the crust choice
     func alertHandler(alert:UIAlertAction) {
         crustChoice = alert.title!
-        print(crustChoice)
     }
     
     // gets the user's cheese choice
@@ -85,7 +84,6 @@ class PizzaCreationVC: UIViewController {
         cheeseController.addAction(UIAlertAction(title: "Double Cheese", style: .default)
             { [self] (action) in cheeseChoice = "Double Cheese" } )
         
-        print(cheeseChoice)
         present(cheeseController, animated: true)
         
     }
@@ -109,7 +107,6 @@ class PizzaCreationVC: UIViewController {
         meatController.addAction(UIAlertAction(title: "Canadian Bacon", style: .default)
             { [self] (action) in meatChoice = "Canadian Bacon" } )
         
-        print(meatChoice)
         present(meatController, animated: true)
     }
     
@@ -137,25 +134,44 @@ class PizzaCreationVC: UIViewController {
         veggieController.addAction(UIAlertAction(title: "None", style: .default)
             { [self] (action) in veggieChoice = "None" } )
         
-        print(veggieChoice)
         present(veggieController, animated: true)
     }
     
     // Displays the user's pizza selection
     @IBAction func onDoneButton(_ sender: Any){
-        let userPizza = Pizza(pSize: pSizeChoice, crust: crustChoice, cheese: cheeseChoice, meat: meatChoice, veggies: veggieChoice)
         
-        pizzaString.isHidden = false
-        pizzaString.text = userPizza.toString()
+        let missingIngController = UIAlertController(
+            title: "Missing Ingredient",
+            message: "",
+            preferredStyle: .alert
+        )
+        
+        missingIngController.addAction(UIAlertAction(title: "OK", style: .default))
+        
+        switch (crustChoice, cheeseChoice, meatChoice, veggieChoice){
+        case ("", _, _, _):
+            missingIngController.message = "Please select a crust type."
+            present(missingIngController, animated: true)
+        case (_, "", _, _):
+            missingIngController.message = "Please select a cheese type."
+            present(missingIngController, animated: true)
+        case ( _, _, "", _):
+            missingIngController.message = "Please select a meat option."
+            present(missingIngController, animated: true)
+        case ( _, _, _, ""):
+            missingIngController.message = "Please select a veggie option."
+            present(missingIngController, animated: true)
+        default:
+            
+            let userPizza = Pizza(pSize: pSizeChoice, crust: crustChoice, cheese: cheeseChoice, meat: meatChoice, veggies: veggieChoice)
+            
+            pizzaString.isHidden = false
+            pizzaString.text = userPizza.toString()
+            
+            let menuVC = delegate as! addNewPizza
+            // adds the userPizza to the pizzaList array
+            menuVC.addPizza(pizza: userPizza)
+        }
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

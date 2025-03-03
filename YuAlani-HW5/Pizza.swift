@@ -1,4 +1,6 @@
-//
+// Project: YuAlani-HW5
+// EID: ay7892
+// Course: CS329E
 //  Pizza.swift
 //  YuAlani-HW5
 //
